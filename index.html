@@ -1,0 +1,927 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ENLACE — Colectivo de Ciberseguridad</title>
+  <meta name="description" content="ENLACE es un colectivo abierto de ciberseguridad que conecta personas, conocimiento y oportunidades.">
+  <link rel="icon" href="logo-icon.svg" type="image/svg+xml">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Inter:wght@300;400;500;600;700&display=swap');
+
+    *, *::before, *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --cyan: #00ffff;
+      --magenta: #ff00ff;
+      --yellow: #ffff00;
+      --bg-dark: #0a0a1a;
+      --bg-card: #12122a;
+      --text: #e0e0f0;
+      --text-dim: #8080b0;
+      --glow-cyan: 0 0 20px rgba(0, 255, 255, 0.15);
+      --glow-magenta: 0 0 20px rgba(255, 0, 255, 0.15);
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg-dark);
+      color: var(--text);
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 80% 50% at 50% -10%, rgba(0, 255, 255, 0.06), transparent),
+        radial-gradient(ellipse 60% 40% at 80% 60%, rgba(255, 0, 255, 0.04), transparent),
+        radial-gradient(ellipse 50% 40% at 20% 80%, rgba(0, 255, 255, 0.03), transparent);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 24px;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* Scanline overlay */
+    .scanlines {
+      position: fixed;
+      inset: 0;
+      background: repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 2px,
+        rgba(0, 255, 255, 0.015) 2px,
+        rgba(0, 255, 255, 0.015) 4px
+      );
+      pointer-events: none;
+      z-index: 9999;
+    }
+
+    /* Nav */
+    nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 1000;
+      padding: 16px 0;
+      background: rgba(10, 10, 26, 0.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(0, 255, 255, 0.08);
+    }
+
+    nav .container {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .nav-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+      color: var(--text);
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 1.3rem;
+      font-weight: 700;
+    }
+
+    .nav-logo svg {
+      height: 32px;
+      width: auto;
+    }
+
+    .nav-logo span {
+      background: linear-gradient(135deg, var(--cyan), var(--magenta));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 32px;
+      list-style: none;
+    }
+
+    .nav-links a {
+      color: var(--text-dim);
+      text-decoration: none;
+      font-size: 0.875rem;
+      font-weight: 500;
+      transition: color 0.3s;
+      position: relative;
+    }
+
+    .nav-links a:hover,
+    .nav-links a:focus-visible {
+      color: var(--cyan);
+    }
+
+    .nav-links a::after {
+      content: '';
+      position: absolute;
+      bottom: -4px;
+      left: 0;
+      width: 0;
+      height: 1px;
+      background: var(--cyan);
+      transition: width 0.3s;
+    }
+
+    .nav-links a:hover::after {
+      width: 100%;
+    }
+
+    .hamburger {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      cursor: pointer;
+      background: none;
+      border: none;
+      padding: 4px;
+    }
+
+    .hamburger span {
+      display: block;
+      width: 24px;
+      height: 2px;
+      background: var(--text);
+      transition: 0.3s;
+      border-radius: 2px;
+    }
+
+    /* Hero */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      position: relative;
+      padding: 120px 0 80px;
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 60px;
+      align-items: center;
+    }
+
+    .hero-content h1 {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: clamp(2.5rem, 5vw, 4rem);
+      font-weight: 700;
+      line-height: 1.1;
+      margin-bottom: 8px;
+    }
+
+    .hero-content .glitch-text {
+      background: linear-gradient(135deg, var(--cyan), var(--magenta));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      display: inline-block;
+    }
+
+    .hero-content .subtitle {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: clamp(1rem, 2vw, 1.25rem);
+      color: var(--text-dim);
+      margin-bottom: 24px;
+      letter-spacing: 2px;
+    }
+
+    .hero-content .tagline {
+      font-size: 1.05rem;
+      color: var(--text-dim);
+      margin-bottom: 40px;
+      max-width: 480px;
+      line-height: 1.7;
+    }
+
+    .hero-actions {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 28px;
+      border-radius: 4px;
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 0.9rem;
+      font-weight: 600;
+      text-decoration: none;
+      transition: 0.25s ease;
+      cursor: pointer;
+      border: 1px solid transparent;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--cyan), var(--magenta));
+      color: #0a0a1a;
+      box-shadow: var(--glow-cyan);
+    }
+
+    .btn-primary:hover,
+    .btn-primary:focus-visible {
+      box-shadow: 0 0 30px rgba(0, 255, 255, 0.3);
+      transform: translateY(-2px);
+    }
+
+    .btn-outline {
+      border-color: var(--cyan);
+      color: var(--cyan);
+      background: transparent;
+    }
+
+    .btn-outline:hover,
+    .btn-outline:focus-visible {
+      background: rgba(0, 255, 255, 0.08);
+      box-shadow: var(--glow-cyan);
+      transform: translateY(-2px);
+    }
+
+    /* Sections general */
+    section {
+      padding: 100px 0;
+    }
+
+    .section-label {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 0.8rem;
+      color: var(--cyan);
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .section-label::before {
+      content: '';
+      width: 24px;
+      height: 1px;
+      background: var(--cyan);
+    }
+
+    .section-title {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: clamp(1.75rem, 3.5vw, 2.5rem);
+      margin-bottom: 16px;
+    }
+
+    .section-desc {
+      color: var(--text-dim);
+      max-width: 600px;
+      margin-bottom: 48px;
+      font-size: 1rem;
+    }
+
+    /* Philosophy cards */
+    .philo-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+    }
+
+    .philo-card {
+      background: var(--bg-card);
+      border: 1px solid rgba(0, 255, 255, 0.06);
+      border-radius: 8px;
+      padding: 36px 28px;
+      transition: 0.3s;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .philo-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, var(--cyan), var(--magenta));
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+
+    .philo-card:hover {
+      border-color: rgba(0, 255, 255, 0.15);
+      transform: translateY(-4px);
+      box-shadow: var(--glow-cyan);
+    }
+
+    .philo-card:hover::before {
+      opacity: 1;
+    }
+
+    .philo-number {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 0.75rem;
+      color: var(--cyan);
+      margin-bottom: 12px;
+      letter-spacing: 2px;
+    }
+
+    .philo-card h3 {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 1.3rem;
+      margin-bottom: 12px;
+    }
+
+    .philo-card p {
+      color: var(--text-dim);
+      font-size: 0.92rem;
+      line-height: 1.7;
+    }
+
+    /* Mission / Vision */
+    .mv-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+    }
+
+    .mv-card {
+      background: var(--bg-card);
+      border: 1px solid rgba(0, 255, 255, 0.06);
+      border-radius: 8px;
+      padding: 40px 32px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .mv-card::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      right: 0;
+      width: 120px;
+      height: 120px;
+      background: radial-gradient(circle, rgba(0, 255, 255, 0.04), transparent);
+      pointer-events: none;
+    }
+
+    .mv-card .icon {
+      font-size: 1.5rem;
+      margin-bottom: 16px;
+      display: block;
+    }
+
+    .mv-card h3 {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 1.25rem;
+      margin-bottom: 12px;
+    }
+
+    .mv-card p {
+      color: var(--text-dim);
+      font-size: 0.92rem;
+      line-height: 1.7;
+    }
+
+    /* Values */
+    .values-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 20px;
+    }
+
+    .value-item {
+      background: var(--bg-card);
+      border: 1px solid rgba(255, 0, 255, 0.06);
+      border-radius: 8px;
+      padding: 24px 24px;
+      transition: 0.3s;
+    }
+
+    .value-item:hover {
+      border-color: rgba(255, 0, 255, 0.15);
+      box-shadow: var(--glow-magenta);
+    }
+
+    .value-item h4 {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 1rem;
+      color: var(--magenta);
+      margin-bottom: 8px;
+    }
+
+    .value-item p {
+      color: var(--text-dim);
+      font-size: 0.88rem;
+      line-height: 1.6;
+    }
+
+    /* Community activities */
+    .community-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 20px;
+    }
+
+    .activity-card {
+      background: var(--bg-card);
+      border: 1px solid rgba(0, 255, 255, 0.06);
+      border-radius: 8px;
+      padding: 28px 24px;
+      transition: 0.3s;
+    }
+
+    .activity-card:hover {
+      border-color: rgba(0, 255, 255, 0.15);
+      transform: translateY(-3px);
+      box-shadow: var(--glow-cyan);
+    }
+
+    .activity-card .emoji {
+      font-size: 1.5rem;
+      display: block;
+      margin-bottom: 12px;
+    }
+
+    .activity-card h4 {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 1rem;
+      margin-bottom: 8px;
+    }
+
+    .activity-card p {
+      color: var(--text-dim);
+      font-size: 0.88rem;
+      line-height: 1.6;
+    }
+
+    .activity-card ul {
+      list-style: none;
+      margin-top: 10px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    .activity-card ul li {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 0.72rem;
+      color: var(--cyan);
+      background: rgba(0, 255, 255, 0.06);
+      padding: 3px 10px;
+      border-radius: 3px;
+      border: 1px solid rgba(0, 255, 255, 0.1);
+    }
+
+    /* Channels */
+    #canales {
+      scroll-margin-top: 80px;
+    }
+
+    .channels-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      gap: 20px;
+    }
+
+    .channel-card {
+      background: var(--bg-card);
+      border: 1px solid rgba(0, 255, 255, 0.06);
+      border-radius: 8px;
+      padding: 28px 24px;
+      text-decoration: none;
+      color: var(--text);
+      transition: 0.3s;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      gap: 12px;
+    }
+
+    .channel-card:hover {
+      border-color: var(--cyan);
+      transform: translateY(-4px);
+      box-shadow: var(--glow-cyan);
+    }
+
+    .channel-card .channel-icon {
+      width: 48px;
+      height: 48px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 12px;
+      background: rgba(0, 255, 255, 0.05);
+      border: 1px solid rgba(0, 255, 255, 0.1);
+    }
+
+    .channel-card .channel-icon svg {
+      width: 26px;
+      height: 26px;
+    }
+
+    .channel-card h4 {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 1rem;
+    }
+
+    .channel-card p {
+      color: var(--text-dim);
+      font-size: 0.82rem;
+      line-height: 1.5;
+    }
+
+    .channel-card .channel-arrow {
+      color: var(--cyan);
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 0.85rem;
+      opacity: 0;
+      transition: opacity 0.3s, transform 0.3s;
+    }
+
+    .channel-card:hover .channel-arrow {
+      opacity: 1;
+      transform: translateX(4px);
+    }
+
+    /* Footer */
+    footer {
+      border-top: 1px solid rgba(0, 255, 255, 0.06);
+      padding: 40px 0;
+      text-align: center;
+    }
+
+    footer p {
+      color: var(--text-dim);
+      font-size: 0.85rem;
+    }
+
+    footer .footer-links {
+      display: flex;
+      justify-content: center;
+      gap: 24px;
+      margin-top: 12px;
+      list-style: none;
+    }
+
+    footer .footer-links a {
+      color: var(--text-dim);
+      text-decoration: none;
+      font-size: 0.82rem;
+      transition: color 0.3s;
+    }
+
+    footer .footer-links a:hover {
+      color: var(--cyan);
+    }
+
+    /* Mobile */
+    @media (max-width: 768px) {
+      .nav-links {
+        display: none;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        background: rgba(10, 10, 26, 0.95);
+        backdrop-filter: blur(12px);
+        flex-direction: column;
+        padding: 24px;
+        gap: 20px;
+        border-bottom: 1px solid rgba(0, 255, 255, 0.08);
+      }
+
+      .nav-links.open {
+        display: flex;
+      }
+
+      .hamburger {
+        display: flex;
+      }
+
+    .hero-grid {
+      grid-template-columns: 1fr;
+      text-align: center;
+    }
+
+    .hero-content .tagline {
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .hero-actions {
+      justify-content: center;
+    }
+
+      .hero-content .tagline {
+        margin-left: auto;
+        margin-right: auto;
+      }
+
+      .hero-actions {
+        justify-content: center;
+      }
+
+      .hero-visual {
+        order: -1;
+      }
+
+      .hero-logo {
+        max-width: 200px;
+      }
+
+      .philo-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .mv-grid {
+        grid-template-columns: 1fr;
+      }
+
+      section {
+        padding: 64px 0;
+      }
+
+      .section-desc {
+        margin-left: auto;
+        margin-right: auto;
+        text-align: center;
+      }
+
+      .section-label {
+        justify-content: center;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .hero-content h1 {
+        font-size: 2rem;
+      }
+
+      .hero-logo {
+        max-width: 160px;
+      }
+
+      .container {
+        padding: 0 16px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="scanlines"></div>
+
+  <nav>
+    <div class="container">
+      <a href="#" class="nav-logo">
+        <span>ENLACE</span>
+      </a>
+      <button class="hamburger" aria-label="Menu" onclick="this.classList.toggle('active');document.querySelector('.nav-links').classList.toggle('open')">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+      <ul class="nav-links">
+        <li><a href="#filosofia">Filosofía</a></li>
+        <li><a href="#mision-vision">Misión</a></li>
+        <li><a href="#valores">Valores</a></li>
+        <li><a href="#comunidad">Comunidad</a></li>
+        <li><a href="#canales">Canales</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <section class="hero" id="inicio">
+    <div class="container">
+      <div class="hero-grid">
+        <div class="hero-content">
+          <p class="subtitle">// COLECTIVO DE CIBERSEGURIDAD</p>
+          <h1>
+            <span class="glitch-text">ENLACE</span>
+          </h1>
+          <p class="tagline">
+            Conectamos personas, conocimiento y oportunidades para fortalecer nuestra capacidad colectiva de proteger sistemas, organizaciones y comunidades.
+          </p>
+          <div class="hero-actions">
+            <a href="#comunidad" class="btn btn-primary">Explorar →</a>
+            <a href="#canales" class="btn btn-outline">Unirse</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="filosofia">
+    <div class="container">
+      <p class="section-label">Filosofía</p>
+      <h2 class="section-title">Nuestros principios</h2>
+      <p class="section-desc">ENLACE se construye alrededor de tres pilares fundamentales que guían todo lo que hacemos.</p>
+      <div class="philo-grid">
+        <div class="philo-card">
+          <p class="philo-number">01</p>
+          <h3>Aprender</h3>
+          <p>Aprendemos unos de otros, de la experiencia, de la investigación y de la práctica. No importa si estás comenzando o si llevas años: todos tenemos algo que aprender y algo que enseñar.</p>
+        </div>
+        <div class="philo-card">
+          <p class="philo-number">02</p>
+          <h3>Construir</h3>
+          <p>Convertimos el conocimiento en práctica. Creamos laboratorios, herramientas, documentación, automatizaciones, proyectos Open Source y otros recursos útiles para la comunidad.</p>
+        </div>
+        <div class="philo-card">
+          <p class="philo-number">03</p>
+          <h3>Compartir</h3>
+          <p>Devolvemos a la comunidad lo que aprendemos y construimos mediante charlas, talleres, publicaciones, proyectos y participación en eventos dentro y fuera de ENLACE.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="mision-vision">
+    <div class="container">
+      <p class="section-label">Dirección</p>
+      <h2 class="section-title">Misión &amp; Visión</h2>
+      <p class="section-desc">Hacia dónde vamos y por qué existimos como colectivo.</p>
+      <div class="mv-grid">
+        <div class="mv-card">
+          <span class="icon">🎯</span>
+          <h3>Misión</h3>
+          <p>Crear una comunidad abierta de ciberseguridad que conecte personas, conocimiento y oportunidades, promoviendo el aprendizaje colaborativo, la construcción de capacidades prácticas y el intercambio abierto de conocimiento para fortalecer la protección de organizaciones y personas.</p>
+        </div>
+        <div class="mv-card">
+          <span class="icon">🌎</span>
+          <h3>Visión</h3>
+          <p>Convertirnos en una comunidad de referencia en Panamá y la región para aprender, construir y compartir conocimiento en ciberseguridad, reconocida por nuestra cultura colaborativa, nuestras contribuciones técnicas y nuestro impacto positivo en el ecosistema.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="valores">
+    <div class="container">
+      <p class="section-label">Valores</p>
+      <h2 class="section-title">Nuestra identidad</h2>
+      <p class="section-desc">Los principios que nos definen como colectivo.</p>
+      <div class="values-grid">
+        <div class="value-item">
+          <h4>Respeto</h4>
+          <p>Tratamos a todas las personas con respeto, independientemente de su experiencia, formación o nivel técnico.</p>
+        </div>
+        <div class="value-item">
+          <h4>Inclusión</h4>
+          <p>Un espacio donde estudiantes, profesionales, investigadores, desarrolladores y curiosos pueden participar.</p>
+        </div>
+        <div class="value-item">
+          <h4>Conocimiento abierto</h4>
+          <p>Materiales y proyectos abiertos, reutilizables y accesibles para toda la comunidad.</p>
+        </div>
+        <div class="value-item">
+          <h4>Colaboración</h4>
+          <p>Preferimos construir juntos antes que competir entre nosotros.</p>
+        </div>
+        <div class="value-item">
+          <h4>Responsabilidad</h4>
+          <p>La ciberseguridad debe practicarse de forma ética, responsable y respetuosa.</p>
+        </div>
+        <div class="value-item">
+          <h4>Sin elitismo</h4>
+          <p>El conocimiento no otorga superioridad. Los niveles de contribución representan participación, no jerarquía.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="comunidad">
+    <div class="container">
+      <p class="section-label">Comunidad</p>
+      <h2 class="section-title">Actividades</h2>
+      <p class="section-desc">Formas de participar y crecer dentro de ENLACE.</p>
+      <div class="community-grid">
+        <div class="activity-card">
+          <span class="emoji">🎤</span>
+          <h4>Charlas técnicas</h4>
+          <p>Espacios para compartir conocimientos, experiencias y casos prácticos.</p>
+        </div>
+        <div class="activity-card">
+          <span class="emoji">🛠️</span>
+          <h4>Workshops</h4>
+          <p>Sesiones prácticas orientadas a aprender construyendo.</p>
+        </div>
+        <div class="activity-card">
+          <span class="emoji">🤝</span>
+          <h4>Networking</h4>
+          <p>Espacios para conectar personas, compartir experiencias y crear oportunidades de colaboración.</p>
+        </div>
+        <div class="activity-card">
+          <span class="emoji">📦</span>
+          <h4>Proyectos Open Source</h4>
+          <p>Desarrollo colaborativo de herramientas, laboratorios, scripts, reglas de detección, documentación y más.</p>
+          <ul>
+            <li>herramientas</li>
+            <li>laboratorios</li>
+            <li>scripts</li>
+            <li>detección</li>
+            <li>playbooks</li>
+            <li>guías</li>
+          </ul>
+        </div>
+        <div class="activity-card">
+          <span class="emoji">🌐</span>
+          <h4>Participación externa</h4>
+          <p>Representamos a la comunidad en conferencias, meetups, universidades, paneles, podcasts y eventos nacionales y regionales.</p>
+          <ul>
+            <li>conferencias</li>
+            <li>meetups</li>
+            <li>universidades</li>
+            <li>paneles</li>
+            <li>podcasts</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="canales">
+    <div class="container">
+      <p class="section-label">Canales</p>
+      <h2 class="section-title">Conéctate con ENLACE</h2>
+      <p class="section-desc">Únete a nuestros canales oficiales y sé parte de la comunidad.</p>
+      <div class="channels-grid">
+        <a href="https://wa.me/" target="_blank" rel="noopener" class="channel-card">
+          <div class="channel-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#00ffff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/>
+            </svg>
+          </div>
+          <h4>WhatsApp</h4>
+          <p>Grupo principal de la comunidad</p>
+          <span class="channel-arrow">→</span>
+        </a>
+        <a href="https://discord.com" target="_blank" rel="noopener" class="channel-card">
+          <div class="channel-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#00ffff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/>
+            </svg>
+          </div>
+          <h4>Discord</h4>
+          <p>Canales de voz, texto y eventos</p>
+          <span class="channel-arrow">→</span>
+        </a>
+        <a href="https://github.com/enlace-sh" target="_blank" rel="noopener" class="channel-card">
+          <div class="channel-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#00ffff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/>
+            </svg>
+          </div>
+          <h4>GitHub</h4>
+          <p>Proyectos Open Source</p>
+          <span class="channel-arrow">→</span>
+        </a>
+        <a href="mailto:info@enlace.sh" class="channel-card">
+          <div class="channel-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#00ffff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/>
+            </svg>
+          </div>
+          <h4>Email</h4>
+          <p>Contacto directo</p>
+          <span class="channel-arrow">→</span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="container">
+      <p>© 2026 ENLACE — Colectivo de Ciberseguridad</p>
+      <ul class="footer-links">
+        <li><a href="ENLACE.md">Manifiesto</a></li>
+        <li><a href="https://github.com/ENLACE-PTY">GitHub</a></li>
+      </ul>
+    </div>
+  </footer>
+
+</body>
+</html>
