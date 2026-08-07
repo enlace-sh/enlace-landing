@@ -124,16 +124,3 @@ Desarrollo colaborativo de:
 * guías
 * recursos educativos
 
-### Participación externa
-
-Los miembros de ENLACE podrán representar a la comunidad en:
-
-* conferencias
-* meetups
-* universidades
-* paneles
-* podcasts
-* workshops
-* eventos nacionales y regionales
-
----
